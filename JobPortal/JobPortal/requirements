@@ -1,0 +1,51 @@
+This diagram represents the workflow of a job portal system, outlining the user journey from registration to job application and profile management. Below is a detailed breakdown of the process:  
+
+---
+
+### **1. User Registration & Authentication**  
+- A **New User** can sign up as a **Candidate** (Recruiter option is shown but not detailed).  
+- The **Registration** process requires email verification through **OTP (One-Time Password)**.  
+  - If the OTP is correct, the email is verified.  
+  - If incorrect, the user can **Resend OTP** and try again.  
+- Users can also opt for **Google Sign-In** as an alternative login method.  
+- Once registered, users can proceed to **Login**.  
+- **Forgot Password?**  
+  - Users can reset their password by entering their email, receiving an **OTP**, and setting a new password.  
+
+---
+
+### **2. Dashboard & Profile Management**  
+- After logging in, users access the **Dashboard**, which provides multiple options:  
+  - **Update Profile**  
+    - Users can enter their details, edit them, and save the changes.  
+  - **View Profile**  
+  - **Change Password** and **Update Password**  
+  - **Log Out**  
+
+---
+
+### **3. Job Search & Application Process**  
+- **Recommended Jobs**  
+  - A list of job recommendations is provided based on user preferences.  
+  - Users can **View** job details, **Save** jobs, and **Apply**.  
+- **Saved Jobs**  
+  - Users can revisit and review previously saved job listings.  
+- **Jobs Applied**  
+  - Users can check their applied jobs and monitor their status:  
+    - **Screening**  
+    - **Shortlisted**  
+    - **Interviewing**  
+    - **Selected**  
+
+---
+
+### **4. Job Alerts & Resume Management**  
+- **Job Alerts**  
+  - Users receive updates and notifications regarding job applications.  
+- **My Resume**  
+  - Users can download their resume from the portal.  
+
+---
+
+### **Conclusion**  
+This workflow provides a structured approach to job hunting, including registration, job search, application tracking, and profile management. The system ensures an intuitive experience by incorporating essential features such as OTP verification, password recovery, and personalized job recommendations.
