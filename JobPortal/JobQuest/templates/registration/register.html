@@ -1,14 +1,121 @@
-<div class="form-container">
-    <h2>Register</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Register</button>
-    </form>
-    <div class="google-login">
-        <p>Or log in using Google:</p>
-        <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-secondary">
-            Login with Google
-        </a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - JobQuest</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Form Container */
+        .form-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        /* Heading Styling */
+        h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 24px;
+        }
+
+        /* Form Fields */
+        form {
+            margin-bottom: 1.5rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #28a745;
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #218838;
+        }
+
+        /* Google Login Section */
+        .google-login {
+            text-align: center;
+        }
+
+        .google-login p {
+            color: #555;
+            margin-bottom: 0.5rem;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Register</h2>
+
+        <!-- Registration Form -->
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+
+        <!-- Google Login Option -->
+        <div class="google-login">
+            <p>Or log in using Google:</p>
+            <a href="{% url 'social:begin' 'google-oauth2' %}" class="btn btn-secondary">
+                Login with Google
+            </a>
+        </div>
     </div>
-</div>
+</body>
+</html>
