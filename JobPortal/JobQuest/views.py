@@ -10,6 +10,7 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
             login(request, user) 
             profile = Profile.objects.create(user=user)
             profile.generate_otp()
