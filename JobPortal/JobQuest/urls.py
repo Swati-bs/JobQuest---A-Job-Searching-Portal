@@ -11,5 +11,7 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),  # Redirect to the homepage after logout
     path('login/', LoginView.as_view(template_name='registration/login.html'), name='login'),  # Define the login route
     path('resend-otp/', views.resend_otp, name='resend_otp'),
-    
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('verify-password-otp/', views.verify_password_otp, name='verify_password_otp'),
+    path('reset-password/', views.reset_password, name='reset_password'),
 ]

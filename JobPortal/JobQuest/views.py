@@ -113,3 +113,97 @@ def logout_view(request):
     else:
         messages.error(request, "Logout failed. Please try again.")
         return redirect('home')  # Redirect somewhere else if logout fails
+    
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            profile = Profile.objects.get(user=user)
+            profile.generate_otp()  # Generate a new OTP
+            send_mail(
+                subject="Password Reset OTP",
+                message=f"Hi {user.username},\n\nYour OTP for password reset is {profile.otp}.",
+                from_email="taesberry3112@gmail.com",
+                recipient_list=[email],
+                fail_silently=False,
+            )
+            messages.success(request, "OTP sent to your email. Please check.")
+            return redirect('verify_password_otp')  # Redirect to OTP verification page
+        except User.DoesNotExist:
+            messages.error(request, "No user found with this email.")
+    return render(request, 'registration/forgot_password.html')
+
+from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
+import logging
+
+logger = logging.getLogger(__name__)  # Set up logging
+
+def verify_password_otp(request):
+    if request.method == 'POST':
+        # Logging the start of the process
+        logger.info("Entered password reset OTP block")
+
+        # Retrieve the OTP and email from the POST request
+        otp = request.POST.get('otp')
+        email = request.POST.get('email')
+
+        # Validate that both OTP and email are provided
+        if not otp or not email:
+            messages.error(request, "Please provide both email and OTP.")
+            return render(request, 'registration/verify_password_otp.html')
+
+        try:
+            # Attempt to fetch the User object using the provided email
+            user = User.objects.get(email=email)
+            logger.debug(f"User found: {user}")
+
+            # Attempt to fetch the Profile object associated with the User
+            profile = Profile.objects.get(user=user)
+            logger.debug(f"Profile found for user: {profile}")
+
+            # Verify that the OTP matches the stored value
+            if profile.otp == otp:  # Use secure OTP comparison in production
+                messages.success(request, "OTP verified! You can now reset your password.")
+                logger.info("OTP verified! Redirecting to reset password page.")
+                return redirect(reverse('reset_password'))  # Use dynamic URL resolution
+            else:
+                messages.error(request, "Invalid OTP. Please try again.")
+        except User.DoesNotExist:
+            # Handle case where user doesn't exist
+            logger.warning("No user found with the provided email.")
+            messages.error(request, "No user found with this email.")
+        except Profile.DoesNotExist:
+            # Handle case where profile doesn't exist
+            logger.warning("No profile associated with the user.")
+            messages.error(request, "No profile associated with this user.")
+        except Exception as e:
+            # Handle any unexpected exceptions
+            logger.error(f"Unexpected error occurred: {e}")
+            messages.error(request, "An error occurred while verifying OTP. Please try again.")
+
+    # Render the OTP verification page for GET requests or after an error
+    print("not an post request")
+    return render(request, 'registration/verify_password_otp.html')
+
+from django.contrib.auth.models import User
+
+def reset_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        if new_password == confirm_password:
+            try:
+                user = User.objects.get(email=email)
+                user.set_password(new_password)  # Update password securely
+                user.save()
+                messages.success(request, "Password reset successful. You can now log in.")
+                return redirect('login')  # Redirect to login page
+            except User.DoesNotExist:
+                messages.error(request, "No user found with this email.")
+        else:
+            messages.error(request, "Passwords do not match. Please try again.")
+    return render(request, 'registration/reset_password.html')
+
