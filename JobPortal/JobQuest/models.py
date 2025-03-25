@@ -3,9 +3,27 @@ from django.db import models
 import random
 from datetime import datetime, timedelta
 from django.utils.timezone import now
+from django.core.validators import RegexValidator
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    first_name = models.CharField(max_length=50, blank=True, null=True)
+    last_name = models.CharField(max_length=50, blank=True, null=True)
+    phone_number = models.CharField(
+            max_length=15,
+            blank=True,
+            null=True,
+            validators=[
+                RegexValidator(
+                    regex=r'^\+?[1-9]\d{1,14}$',
+                    message="Enter a valid phone number.",
+                )
+            ],
+        )
+    bio = models.TextField(blank=True, null=True)  # Optional biography field
+
+
     otp = models.CharField(max_length=6, blank=True, null=True)  # Stores the OTP
     otp_created_at = models.DateTimeField(auto_now=True)  # This field tracks the OTP generation time
     is_email_verified = models.BooleanField(default=False)  # Tracks if email is verified
@@ -23,3 +41,5 @@ class Profile(models.Model):
     
     def __str__(self):
         return self.user.username
+    
+    

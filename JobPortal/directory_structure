@@ -1,0 +1,43 @@
+JobPortal/
+├── manage.py
+├── db.sqlite3
+├── JobPortal/
+│   ├── __pycache__/
+│   ├── asgi.py
+│   ├── requirements/
+│   ├── settings.py
+│   ├── urls.py  # Include dashboard-related URL routing
+│   ├── wsgi.py
+├── JobQuest/
+│   ├── __pycache__/
+│   ├── migrations/
+│   ├── templates/
+│   │   ├── JobQuest/
+│   │   │   ├── home.html  # Existing home page template
+│   │   ├── registration/  # Existing folder for registration-related templates
+│   │   │   ├── forgot_password.html
+│   │   │   ├── login.html
+│   │   │   ├── register.html
+│   │   │   ├── reset_password.html
+│   │   │   ├── verify_otp.html
+│   │   │   ├── verify_password_otp.html
+│   │   ├── dashboard/  # New folder for dashboard-related templates
+│   │   │   ├── dashboard.html  # Main dashboard page
+│   │   │   ├── update_profile.html  # Update Profile page
+│   │   │   ├── view_profile.html  # View Profile page
+│   │   │   ├── change_password.html  # Change Password page
+│   │   │   └── logout_confirmation.html  # Optional logout confirmation page
+│   ├── __init__.py
+│   ├── admin.py
+│   ├── apps.py
+│   ├── forms.py  # Include UpdateProfileForm for user profile updates
+│   ├── models.py  # Extend the Profile model if needed
+│   ├── tests.py
+│   ├── urls.py  # Add routes for dashboard functionality here
+│   ├── views.py  # Add views for dashboard and profile management here
+└── static/  # Static assets like CSS, JavaScript, and images
+    ├── css/
+    │   ├── style.css  # Add styling for dashboard-related templates
+    ├── js/
+    │   └── script.js  # Optional interactivity for profile/dashboard
+    └── images/

@@ -4,28 +4,54 @@ from django.contrib.auth import login
 from django.core.mail import send_mail
 from .models import Profile
 from .forms import CustomUserCreationForm
+from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from django.contrib import messages
+from django.core.mail import send_mail
+from .models import Profile
+from .forms import CustomUserCreationForm
+from django.contrib.messages import get_messages
+
 
 def register(request):
+    storage = get_messages(request)
+    for _ in storage:  # Iterate to clear the queue
+        pass
+
     if request.method == 'POST':
+        print("DEBUG: POST data:", request.POST)
+        print(f"DEBUG: successful post request for registration")
+
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            print("DEBUG: Form is valid!")
+            user = form.save()  # Save the user instance from the form
             user.backend = 'django.contrib.auth.backends.ModelBackend'
-            login(request, user) 
-            profile = Profile.objects.create(user=user)
-            profile.generate_otp()
+            login(request, user)  # Log in the user automatically
 
-            send_mail(
-                subject="Email Verification for JobPortal",
-                message=f"Hi {user.username},\n\nYour  OTP for JobQuest is {profile.otp}.",
-                from_email="taesberry3112@gmail.com",  # Replace with your email
-                recipient_list=[user.email],
-                fail_silently=False,
-            )
+            # Create the profile using get_or_create to avoid duplicates
+            profile, created = Profile.objects.get_or_create(user=user)
+
+            # Generate OTP only if the profile is newly created
+            if created:
+                profile.generate_otp()
+                try:
+                    send_mail(
+                        subject="Email Verification for JobPortal",
+                        message=f"Hi {user.username},\n\nYour OTP for JobQuest is {profile.otp}.",
+                        from_email="taesberry3112@gmail.com",  # Replace with your email
+                        recipient_list=[user.email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    messages.error(request, f"Failed to send email. Error: {e}")
+                    return redirect('register')  # Redirect back to registration
 
             messages.success(request, "Registration successful! Check your email for OTP.")
             return redirect('verify_otp')  # Redirect to OTP verification page
         else:
+            print("Registration failed.")
+            print("DEBUG: ", form.errors)
             messages.error(request, "Registration failed. Please check the form and try again.")
     else:
         form = CustomUserCreationForm()
@@ -90,7 +116,7 @@ from django.shortcuts import render
 
 @login_required
 def home(request):
-    return render(request, 'home.html', {'username': request.user.username})
+    return render(request, 'JobQuest/dashboard/dashboard.html', {'username': request.user.username})
 
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -207,3 +233,46 @@ def reset_password(request):
             messages.error(request, "Passwords do not match. Please try again.")
     return render(request, 'registration/reset_password.html')
 
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def view_dashboard(request):
+    return render(request, 'JobQuest/dashboard/dashboard.html', {'username': request.user.username})
+
+from .forms import UpdateProfileForm
+
+@login_required
+def update_profile(request):
+    if request.method == 'POST':
+        form = UpdateProfileForm(request.POST, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Profile updated successfully!")
+            return redirect('view_profile')
+        else:
+            messages.error(request, "Failed to update profile. Please try again.")
+    else:
+        form = UpdateProfileForm(instance=request.user.profile)
+    return render(request, 'JobQuest/dashboard/update_profile.html', {'form': form})
+
+@login_required
+def view_profile(request):
+    profile = request.user.profile  # Assuming Profile is linked to User
+    return render(request, 'JobQuest/dashboard/view_profile.html', {'profile': profile})
+
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')  # Redirect to login page
+
+
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.messages.views import SuccessMessageMixin
+
+class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
+    template_name = 'JobQuest/dashboard/change_password.html'  # Correct path to the template
+    success_message = "Your password was successfully updated!"
+    success_url = '/dashboard/'  # Redirect to dashboard after password update

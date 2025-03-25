@@ -76,6 +76,8 @@
             {% csrf_token %}
             <button type="submit" class="btn">Logout</button>
         </form>
+        <br>
+        <a href="{% url 'dashboard' %}" class="btn-back">View Dashboard</a>    </div>
     </div>
 </body>
 </html>

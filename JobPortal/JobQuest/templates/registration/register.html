@@ -14,35 +14,37 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            overflow-y: auto; /* Add scroll if needed */
         }
 
         /* Form Container */
         .form-container {
             background: #fff;
-            padding: 2rem;
+            padding: 1.5rem; /* Reduced padding */
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
+            width: 90%; /* Changed from 100% to fit smaller screens */
+            max-width: 500px; /* Reduced max width */
             text-align: center;
+            padding-right: 50px;
         }
 
         /* Heading Styling */
         h2 {
             color: #333;
-            margin-bottom: 1.5rem;
-            font-size: 24px;
+            margin-bottom: 1rem;
+            font-size: 22px;
         }
 
         /* Form Fields */
         form {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 0.8rem;
+            padding: 0.7rem; /* Reduced padding */
             margin: 0.5rem 0;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -58,10 +60,10 @@
         /* Buttons */
         .btn {
             display: inline-block;
-            padding: 0.8rem;
+            padding: 0.7rem 1rem; /* Adjusted padding */
             border: none;
             border-radius: 4px;
-            font-size: 16px;
+            font-size: 14px; /* Reduced font size */
             cursor: pointer;
             transition: background-color 0.3s ease;
             text-decoration: none;
@@ -96,14 +98,38 @@
             margin-bottom: 0.5rem;
             font-size: 14px;
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 1rem; /* Reduce padding further on small screens */
+                max-width: 100%; /* Ensure it fills the screen */
+            }
+
+            h2 {
+                font-size: 20px; /* Adjust heading size */
+            }
+
+            .btn {
+                font-size: 13px; /* Reduce button font size */
+                padding: 0.6rem 0.8rem; /* Reduce button padding */
+            }
+        }
     </style>
 </head>
 <body>
     <div class="form-container">
         <h2>Register</h2>
+        {% if form.errors %}
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    <li>{{ field|capfirst }}: {{ errors|join:', ' }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         <!-- Registration Form -->
-        <form method="post">
+        <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary">Register</button>

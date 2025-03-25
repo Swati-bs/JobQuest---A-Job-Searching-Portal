@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>View Profile</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container Styling */
+        .container {
+            max-width: 500px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 24px;
+        }
+
+        .profile-detail {
+            font-size: 18px;
+            margin: 0.5rem 0;
+            color: #555;
+        }
+
+        .profile-detail strong {
+            color: #333;
+        }
+
+        .btn-back {
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Profile</h2>
+        <p class="profile-detail"><strong>Username:</strong> {{ profile.user.username }}</p>
+        <p class="profile-detail"><strong>Email:</strong> {{ profile.user.email }}</p>
+        <p class="profile-detail"><strong>First Name:</strong> {{ profile.first_name }}</p>
+        <p class="profile-detail"><strong>Last Name:</strong> {{ profile.last_name }}</p>
+        <p class="profile-detail"><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+        <p class="profile-detail"><strong>Bio:</strong> {{ profile.bio }}</p>
+        <br><br><br>
+        <a href="{% url 'dashboard' %}" class="btn-back">Back to Dashboard</a>    
+    </div>
+</body>
+</html>
