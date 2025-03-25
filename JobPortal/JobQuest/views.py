@@ -116,7 +116,14 @@ from django.shortcuts import render
 
 @login_required
 def home(request):
-    return render(request, 'JobQuest/dashboard/dashboard.html', {'username': request.user.username})
+    profile = request.user.profile  # Get user's profile
+
+    return render(request, 'JobQuest/dashboard/dashboard.html', {'profile': profile})
+
+@login_required
+def logout_confirmation(request):
+    profile = request.user.profile  # Get user's profile
+    return render(request, 'JobQuest/dashboard/logout_confirmation.html', {'profile': profile})
 
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -139,6 +146,7 @@ def logout_view(request):
     else:
         messages.error(request, "Logout failed. Please try again.")
         return redirect('home')  # Redirect somewhere else if logout fails
+    
     
 def forgot_password(request):
     if request.method == 'POST':
@@ -216,6 +224,10 @@ def verify_password_otp(request):
 from django.contrib.auth.models import User
 
 def reset_password(request):
+    storage = get_messages(request)
+    for _ in storage:  # Iterate to clear the queue
+        pass
+
     if request.method == 'POST':
         email = request.POST.get('email')
         new_password = request.POST.get('new_password')
@@ -238,7 +250,8 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def view_dashboard(request):
-    return render(request, 'JobQuest/dashboard/dashboard.html', {'username': request.user.username})
+    profile = request.user.profile  # Get user's profile
+    return render(request, 'JobQuest/dashboard/dashboard.html', {'profile': profile})
 
 from .forms import UpdateProfileForm
 
@@ -261,14 +274,6 @@ def view_profile(request):
     profile = request.user.profile  # Assuming Profile is linked to User
     return render(request, 'JobQuest/dashboard/view_profile.html', {'profile': profile})
 
-from django.contrib.auth import logout
-from django.shortcuts import redirect
-
-def logout_view(request):
-    logout(request)
-    return redirect('login')  # Redirect to login page
-
-
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.messages.views import SuccessMessageMixin
 
@@ -276,3 +281,71 @@ class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'JobQuest/dashboard/change_password.html'  # Correct path to the template
     success_message = "Your password was successfully updated!"
     success_url = '/dashboard/'  # Redirect to dashboard after password update
+
+@login_required
+def deactivate_account(request):
+    storage = get_messages(request)
+    for _ in storage:  # Iterate to clear the queue
+        pass
+    if request.method == 'POST':
+        user = request.user
+        user.is_active = False
+        user.save()
+        return redirect('logout')
+    return render(request, 'JobQuest/dashboard/deactivate_account.html')
+
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+from django.contrib.auth import authenticate, login, get_backends
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
+def reactivate_account(request):
+    storage = get_messages(request)
+    for _ in storage:  # Clear the message queue
+        pass
+
+    if request.method == 'POST':
+        print("DEBUG: Post request for reactivating account")
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        print(f"DEBUG: Entered post, {username}, {password}")
+
+        try:
+            # Try to get the user even if inactive
+            user = User.objects.get(username=username)
+            if not user.is_active:  # Check if the account is inactive
+                if user.check_password(password):  # Verify the password manually
+                    print("DEBUG: User is not active but password is correct")
+
+                    # Reactivate the account
+                    user.is_active = True
+                    user.save()
+
+                    # Set the backend explicitly
+                    backend = get_backends()[0]  # Get the first authentication backend
+                    user.backend = f"{backend.__module__}.{backend.__class__.__name__}"
+
+                    messages.success(request, "Your account has been reactivated successfully!")
+                    login(request, user)  # Log in the user
+                    return redirect('dashboard')  # Redirect to dashboard
+                else:
+                    print("DEBUG: Password is incorrect")
+                    messages.error(request, "Invalid credentials. Please try again.")
+            else:
+                print("DEBUG: User is already active")
+                messages.error(request, "Your account is already active.")
+        except User.DoesNotExist:
+            print("DEBUG: User doesn't exist")
+            messages.error(request, "Invalid credentials. Please try again.")
+
+    return render(request, 'JobQuest/dashboard/reactivate_account.html')
+

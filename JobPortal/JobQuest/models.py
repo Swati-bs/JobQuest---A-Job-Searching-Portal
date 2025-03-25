@@ -22,6 +22,15 @@ class Profile(models.Model):
             ],
         )
     bio = models.TextField(blank=True, null=True)  # Optional biography field
+    location = models.CharField(max_length=100, blank=True)
+    resume = models.FileField(upload_to='resumes/', blank=True, null=True)
+    linkedin = models.URLField(blank=True, null=True)
+    portfolio = models.URLField(blank=True, null=True)
+    github = models.URLField(blank=True, null=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    job_preferences = models.CharField(max_length=255, blank=True, null=True)
+    skills = models.TextField(blank=True, null=True)  # Comma-separated skills list or JSON
+
 
 
     otp = models.CharField(max_length=6, blank=True, null=True)  # Stores the OTP

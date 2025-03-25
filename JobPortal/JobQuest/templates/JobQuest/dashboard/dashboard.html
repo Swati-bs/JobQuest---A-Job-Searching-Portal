@@ -66,6 +66,33 @@
             background-color: #495057;
         }
 
+        .sidebar .menu-item {
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            padding-left: 1rem;
+        }
+
+        .dropdown a {
+            font-size: 16px;
+            background-color: #495057;
+            padding: 0.8rem 1rem;
+            border-radius: 4px;
+        }
+
+        .dropdown a:hover {
+            background-color: #1abc9c;
+        }
+
+        .menu-item.active .dropdown {
+            display: flex; /* Show dropdown when active */
+        }
+
         /* Container Styling */
         .container {
             max-width: 600px;
@@ -76,23 +103,57 @@
     </style>
 </head>
 <body>
+    {% if form.errors %}
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    <li>{{ field }}: {{ errors }}</li>
+                {% endfor %}
+            </ul>
+    {% endif %}
     <!-- Header with Menu Icon -->
     <div class="header">
         <span class="menu-icon" onclick="toggleSidebar()">☰</span>
-        <h1>Welcome, {{ username }}!</h1>
+        <h1>Welcome, {{ profile.user.username }}!</h1>
     </div>
 
     <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
-        <a href="{% url 'update_profile' %}">Update Profile</a>
-        <a href="{% url 'view_profile' %}">View Profile</a>
-        <a href="{% url 'change_password' %}">Change Password</a>
-        <a href="{% url 'logout' %}">Log Out</a>
+        <div class="menu-item" onclick="toggleDropdown(this)">
+            <h3 style="padding-left: 20px;">Your Profile</h3>
+            <div class="dropdown">
+                <a href="{% url 'update_profile' %}">Update Profile</a>
+                <a href="{% url 'view_profile' %}">View Profile</a>
+            </div>
+        </div>
+        <div class="menu-item" onclick="toggleDropdown(this)">
+            <h3 style="padding-left: 20px;">Account Settings</h3>
+            <div class="dropdown">
+                <a href="{% url 'change_password' %}">Change Password</a>
+                <a href="{% url 'deactivate_account' %}">Deactivate</a>
+                <a href="{% url 'logout-confirmation' %}">Logout</a>
+            </div>
+        </div>
+        <a href="#">Job Search</a>
+        <a href="#">Applications</a>
     </div>
 
     <!-- Main Container -->
     <div class="container">
-        <p>JobQuest Job Portal</p>
+        <h1>Welcome back, {{ profile.user.username }}!</h1>
+        <div>
+            <h2>Profile Overview</h2>
+            <p><strong>Name:</strong> {{ profile.first_name }} {{ profile.last_name }}</p>
+            <p><strong>Email:</strong> {{ profile.user.email }}</p>
+            <p><strong>Job Preferences:</strong> {{ profile.bio|default:"Not provided" }}</p>
+        </div>
+
+        <!-- <div>
+            <h2>Navigation</h2>
+            <ul>
+                <li><a href="{% url 'update_profile' %}">Edit Profile</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </div> -->
     </div>
 
     <!-- JavaScript -->
@@ -100,7 +161,11 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const sidebarLeft = sidebar.style.left;
-            sidebar.style.left = sidebarLeft === '0px' ? '-250px' : '0px'; // Toggle visibility
+            sidebar.style.left = sidebarLeft === '0px' ? '-250px' : '0px'; // Toggle sidebar visibility
+        }
+
+        function toggleDropdown(element) {
+            element.classList.toggle('active'); // Toggle dropdown visibility
         }
     </script>
 </body>

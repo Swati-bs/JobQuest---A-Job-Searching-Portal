@@ -14,6 +14,9 @@ urlpatterns = [
     path('forgot-password/', views.forgot_password, name='forgot_password'),
     path('verify-password-otp/', views.verify_password_otp, name='verify_password_otp'),
     path('reset-password/', views.reset_password, name='reset_password'),
+    path('logout-confirmation/', views.logout_confirmation, name='logout-confirmation'),
+    path('reactivate-account/', views.reactivate_account, name='reactivate_account'),
+
 
 
     #Dashboard Features
@@ -22,4 +25,6 @@ urlpatterns = [
     path('dashboard/view-profile/', views.view_profile, name='view_profile'),
     path('dashboard/change-password/', views.ChangePasswordView.as_view(), name='change_password'),
     path('dashboard/logout/', views.logout_view, name='logout'),
+    path('dashboard/deactivate-account/', views.deactivate_account, name='deactivate_account'),
+
 ]
