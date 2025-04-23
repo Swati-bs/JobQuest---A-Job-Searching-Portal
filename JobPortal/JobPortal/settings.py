@@ -135,7 +135,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'example@example.com'  # Replace with your sender email
 =======
 EMAIL_HOST_USER = 'example@org.com'  # Replace with your sender email
->>>>>>> 94692c6ae868f2461ffe57005d0a0d2081428137
 EMAIL_HOST_PASSWORD = '----------'  # Use an app password for Gmail
 
 
