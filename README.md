@@ -23,14 +23,14 @@ The system recommends personalized job listings by **matching the skills** liste
   Users have the ability to **deactivate their account temporarily**, giving them flexibility while keeping their data secure and intact.
 
 - **Job Alerts**  
-  Personalized **job alerts** notify users about relevant opportunities based on their profile and job preferences, ensuring they never miss an opportunity.
+ Developed a smart alert system that delivers personalized job suggestions and real-time application status updates via in-app and email notifications—boosting responsiveness and user satisfaction.
 
 - **Feedback Mechanism**  
   A built-in **feedback system** allows users to report bugs, suggest features, or provide feedback directly from the portal, enhancing user engagement and continuous improvement.
 
 ## Technologies Used
 
-- **Frontend:** HTML5, CSS3, JavaScript, React.js
+- **Frontend:** HTML5, CSS3, JavaScript
 - **Backend:** Django, Python
 - **Database:** SQLite
 - **API & Authentication:** OAuth2 for Google Sign-In
