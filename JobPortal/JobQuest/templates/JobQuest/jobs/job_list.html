@@ -1,0 +1,522 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Job Listings</title>
+        <script>
+            function toggleLocationField() {
+                const locationTypeField = document.getElementById('location_type');
+                const locationField = document.getElementById('location');
+    
+                if (locationTypeField.value === 'Remote') {
+                    locationField.style.display = 'none';  // Hide location input
+                    locationField.value = '';  // Clear the field value
+                } else {
+                    locationField.style.display = 'block';  // Show location input
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>Job Listings</h1>
+    
+        <form method="GET">
+            <label for="location_type">Location Type:</label>
+            <select id="location_type" name="location" onchange="toggleLocationField()">
+                <option value="">Select Location Type</option>
+                <option value="Remote" {% if location_filter == "Remote" %}selected{% endif %}>Remote</option>
+                <option value="On-Site" {% if location_filter == "On-Site" %}selected{% endif %}>On-Site</option>
+                <option value="Hybrid" {% if location_filter == "Hybrid" %}selected{% endif %}>Hybrid</option>
+            </select>
+
+            <label for="location_city" id="location_label" style="display: none;">City:</label>
+            <input type="text" id="location" name="location_city" placeholder="Enter city"
+                    style="display: none;" value="{{ location_filter }}">
+
+            <select name="job_type">
+                <option value="">Select Job Type</option>
+                <option value="Full-time" {% if job_type_filter == "Full-time" %}selected{% endif %}>Full-time</option>
+                <option value="Part-time" {% if job_type_filter == "Part-time" %}selected{% endif %}>Part-time</option>
+                <option value="Internship" {% if job_type_filter == "Internship" %}selected{% endif %}>Internship</option>
+                <option value="Contract" {% if job_type_filter == "Contract" %}selected{% endif %}>Contract</option>
+            </select>
+    
+            <select name="experience_level">
+                <option value="">Select Experience Level</option>
+                <option value="Entry" {% if experience_filter == "Entry" %}selected{% endif %}>Entry</option>
+                <option value="Mid" {% if experience_filter == "Mid" %}selected{% endif %}>Mid</option>
+                <option value="Senior" {% if experience_filter == "Senior" %}selected{% endif %}>Senior</option>
+            </select>
+    
+    
+            <button type="submit">Apply Filters</button>
+        </form>
+    
+        {% for job in jobs %}
+            <div>
+                <h2>{{ job.title }} at {{ job.company_name }}</h2>
+                <p>
+                    {% if job.location_type != 'Remote' %}
+                        {{ job.location }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                    | {{ job.job_type }} | {{ job.experience_level }}
+                </p>
+                <a href="{% url 'job_detail' job.id %}">View Details</a>
+            </div>
+        {% endfor %}
+    
+        {% if jobs.count == 0 %}
+            <p>No jobs found matching your criteria.</p>
+        {% endif %}
+    </body>
+</html> -->
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Job Listings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        form {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+        }
+
+        form label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        form select,
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        form button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        div {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        div > div {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        div h2 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: #343a40;
+        }
+
+        div p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #6c757d;
+        }
+
+        div a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        div a:hover {
+            color: #0056b3;
+        }
+
+        p {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        .job-container{
+                background: #ffffff;
+                padding: 15px;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                max-width: 600px;
+                margin: 0 auto 20px auto;
+            }
+
+        @media (max-width: 768px) {
+            form select,
+            form input,
+            form button {
+                font-size: 0.9rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            div h2 {
+                font-size: 1.3rem;
+            }
+
+            div p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <script>
+        function toggleLocationField() {
+            const locationTypeField = document.getElementById('location_type');
+            const locationField = document.getElementById('location');
+
+            if (locationTypeField.value === 'Remote') {
+                locationField.style.display = 'none';  // Hide location input
+                locationField.value = '';  // Clear the field value
+            } else {
+                locationField.style.display = 'block';  // Show location input
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Job Listings</h1>
+
+    <form method="GET">
+        <label for="location_type">Location Type:</label>
+        <select id="location_type" name="location" onchange="toggleLocationField()">
+            <option value="">Select Location Type</option>
+            <option value="Remote" {% if location_filter == "Remote" %}selected{% endif %}>Remote</option>
+            <option value="On-Site" {% if location_filter == "On-Site" %}selected{% endif %}>On-Site</option>
+            <option value="Hybrid" {% if location_filter == "Hybrid" %}selected{% endif %}>Hybrid</option>
+        </select>
+
+        <label for="location_city" id="location_label" style="display: none;">City:</label>
+        <input type="text" id="location" name="location_city" placeholder="Enter city" style="display: none;" value="{{ location_filter }}">
+
+        <label for="job_type">Job Type:</label>
+        <select name="job_type">
+            <option value="">Select Job Type</option>
+            <option value="Full-time" {% if job_type_filter == "Full-time" %}selected{% endif %}>Full-time</option>
+            <option value="Part-time" {% if job_type_filter == "Part-time" %}selected{% endif %}>Part-time</option>
+            <option value="Internship" {% if job_type_filter == "Internship" %}selected{% endif %}>Internship</option>
+            <option value="Contract" {% if job_type_filter == "Contract" %}selected{% endif %}>Contract</option>
+        </select>
+
+        <label for="experience_level">Experience Level:</label>
+        <select name="experience_level">
+            <option value="">Select Experience Level</option>
+            <option value="Entry" {% if experience_filter == "Entry" %}selected{% endif %}>Entry</option>
+            <option value="Mid" {% if experience_filter == "Mid" %}selected{% endif %}>Mid</option>
+            <option value="Senior" {% if experience_filter == "Senior" %}selected{% endif %}>Senior</option>
+        </select>
+
+        <button type="submit">Apply Filters</button>
+    </form>
+
+    {% for job in jobs %}
+        <div class="job-container">
+            <h2>{{ job.title }} at {{ job.company_name }}</h2>
+            <p>
+                {% if job.location_type != 'Remote' %}
+                    {{ job.location }}
+                {% else %}
+                    Remote
+                {% endif %}
+                | {{ job.job_type }} | {{ job.experience_level }}
+            </p>
+            <a href="{% url 'job_detail' job.id %}">View Details</a>
+        </div>
+    {% endfor %}
+
+    {% if jobs.count == 0 %}
+        <p>No jobs found matching your criteria.</p>
+    {% endif %}
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Job Listings</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Page Title */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        /* Filters Form Container */
+        form {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex; /* Flexbox layout for horizontal alignment */
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* Allows wrapping for smaller screens */
+            gap: 15px; /* Space between form elements */
+            max-width: 100%;
+            margin: 0 auto 20px auto;
+        }
+
+        form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        form select,
+        form input {
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 0; /* Align button with other fields */
+        }
+
+        form button:hover {
+            background-color: #218838;
+        }
+
+        /* Job Listings Container */
+        div.job-container {
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        div h2 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: #343a40;
+        }
+
+        div p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: #6c757d;
+        }
+
+        div a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        div a:hover {
+            color: #0056b3;
+        }
+
+        /* No Jobs Found Message */
+        p.no-jobs {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            form {
+                flex-direction: column; /* Stack the form fields vertically on smaller screens */
+            }
+
+            form select,
+            form input,
+            form button {
+                width: 100%; /* Make form elements fill the container on small screens */
+                font-size: 0.9rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            div h2 {
+                font-size: 1.3rem;
+            }
+
+            div p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <script>
+        // JavaScript to toggle the location field
+        function toggleLocationField() {
+            const locationTypeField = document.getElementById('location_type');
+            const locationField = document.getElementById('location');
+            const locationLabel = document.getElementById('location_label');
+
+            if (locationTypeField.value === 'Remote') {
+                locationField.style.display = 'none'; // Hide location input
+                locationField.value = ''; // Clear the field value
+            } else {
+                locationField.style.display = 'block'; // Show location input
+                locationLabel.style.display = 'block';
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Job Listings</h1>
+
+    <!-- Filters -->
+    <form method="GET">
+        <div>
+            <input
+                type="text"
+                name="search"
+                placeholder="Search jobs (e.g., Developer, Writer)"
+                value="{{ search_query }}"
+            />
+        </div>
+    
+        <div>
+            <label for="location_type">Location Type:</label>
+            <select id="location_type" name="location" onchange="toggleLocationField()">
+                <option value="">Select Location Type</option>
+                <option value="Remote" {% if location_filter == "Remote" %}selected{% endif %}>Remote</option>
+                <option value="On-Site" {% if location_filter == "On-Site" %}selected{% endif %}>On-Site</option>
+                <option value="Hybrid" {% if location_filter == "Hybrid" %}selected{% endif %}>Hybrid</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="location_city" id="location_label" style="display: none;">Location:</label>
+            <input type="text" id="location" name="location_city" placeholder="Enter city" style="display: none;" value="{{ location_filter }}">
+        </div>
+
+        <div>
+            <label for="job_type">Job Type:</label>
+            <select name="job_type">
+                <option value="">Select Job Type</option>
+                <option value="Full-time" {% if job_type_filter == "Full-time" %}selected{% endif %}>Full-time</option>
+                <option value="Part-time" {% if job_type_filter == "Part-time" %}selected{% endif %}>Part-time</option>
+                <option value="Internship" {% if job_type_filter == "Internship" %}selected{% endif %}>Internship</option>
+                <option value="Contract" {% if job_type_filter == "Contract" %}selected{% endif %}>Contract</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="experience_level">Experience Level:</label>
+            <select name="experience_level">
+                <option value="">Select Experience Level</option>
+                <option value="Entry" {% if experience_filter == "Entry" %}selected{% endif %}>Entry</option>
+                <option value="Mid" {% if experience_filter == "Mid" %}selected{% endif %}>Mid</option>
+                <option value="Senior" {% if experience_filter == "Senior" %}selected{% endif %}>Senior</option>
+            </select>
+        </div>
+        <div>
+            <label for="min_salary">Minimum Salary:</label>
+            <input type="number" id="min_salary" name="min_salary" placeholder="Enter minimum salary" value="{{ request.GET.min_salary }}">
+        </div>
+    
+        <div>
+            <label for="max_salary">Maximum Salary:</label>
+            <input type="number" id="max_salary" name="max_salary" placeholder="Enter maximum salary" value="{{ request.GET.max_salary }}">
+        </div>
+     
+        <a style="float: right;" href="{% url 'dashboard' %}" class="btn-back">Back to Dashboard</a>
+        <button type="submit">Apply Filters</button>
+        <button type="reset"onclick="window.location.href='{{ request.path }}'">Clear Filters</button>
+    </form>
+
+    <!-- Job Listings -->
+    {% for job in jobs %}
+        <div class="job-container">
+            <h2>{{ job.title }} at {{ job.company_name }}</h2>
+            <p>
+                {% if job.location_type != 'Remote' %}
+                    {{ job.location }}
+                {% else %}
+                    Remote
+                {% endif %}
+                | {{ job.job_type }} | {{ job.experience_level }} | {{ job.salary_range}}
+            </p>
+            <a href="{% url 'job_detail' job.id %}">View Details</a>
+        </div>
+    {% endfor %}
+
+    {% if jobs.count == 0 %}
+        <p class="no-jobs">No jobs found matching your criteria.</p>
+    {% endif %}
+</body>
+</html>

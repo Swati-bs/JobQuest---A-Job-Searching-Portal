@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container Styling */
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 28px;
+        }
+
+        .card {
+            margin: 1rem 0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff;
+            text-align: left;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-detail {
+            font-size: 18px;
+            margin: 0.5rem 0;
+            color: #555;
+        }
+
+        .profile-detail strong {
+            color: #333;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.2rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 90%;
+                padding: 1.5rem;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .profile-detail {
+                font-size: 16px;
+            }
+
+            .btn-back {
+                font-size: 14px;
+                padding: 0.6rem 1rem;
+            }
+        }
+        .profile-picture {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .profile-picture img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #007bff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .profile-detail {
+            font-size: 18px;
+            margin: 0.5rem 0;
+            color: #555;
+        }
+
+        .profile-detail strong {
+            color: #333;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your Profile</h2>
+        <div class="profile-picture">
+            {% if profile.profile_picture %}
+                <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+            {% else %}
+                <img src="https://via.placeholder.com/120" alt="No Profile Picture">
+            {% endif %}
+        </div>
+        <div class="card">
+            <p class="profile-detail"><strong>Username:</strong> {{ profile.user.username }}</p>
+            <p class="profile-detail"><strong>Email:</strong> {{ profile.user.email }}</p>
+            <p class="profile-detail"><strong>First Name:</strong> {{ profile.first_name }}</p>
+            <p class="profile-detail"><strong>Last Name:</strong> {{ profile.last_name }}</p>
+            <p class="profile-detail"><strong>Phone Number:</strong> {{ profile.phone_number }}</p>
+            <p class="profile-detail"><strong>Bio:</strong> {{ profile.bio }}</p>
+            <div class="profile-detail"><strong>Location:</strong> {{ profile.location }}</div>
+        </div>
+        <div class="card">
+            <div class="profile-detail">
+                <strong>Resume:</strong>
+                {% if profile.resume %}
+                    <a href="{{ profile.resume.url }}" target="_blank"><i class="fas fa-download"></i> Download Resume</a>
+                {% else %}
+                    Not Uploaded
+                {% endif %}
+            </div>
+            <div class="profile-detail"><strong>LinkedIn:</strong> <a href="{{ profile.linkedin }}"><i class="fab fa-linkedin"></i> {{ profile.linkedin }}</a></div>
+            <div class="profile-detail"><strong>Portfolio:</strong> <a href="{{ profile.portfolio }}"><i class="fas fa-briefcase"></i> {{ profile.portfolio }}</a></div>
+            <div class="profile-detail"><strong>GitHub:</strong> <a href="{{ profile.github }}"><i class="fab fa-github"></i> {{ profile.github }}</a></div>
+        </div>
+
+        <div class="card">
+            <strong>Education:</strong>
+            <ul>
+                {% for education in educations %}
+                    <li>{{ education.degree }} at {{ education.university }} ({{ education.graduation_year }})</li>
+                {% empty %}
+                    <li style="color: #999;">No education details available. Add your education to stand out!</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card">
+            <strong>Skills:</strong>
+            <ul>
+                {% for skill in skills %}
+                    <li>{{ skill.skill_name }}</li>
+                {% empty %}
+                    <li style="color: #999;">No skills listed. Add your skills to get better job recommendations!</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card">
+            <strong>Projects:</strong>
+            <ul>
+                {% for project in projects %}
+                    <li><strong>{{ project.project_title }}</strong>: {{ project.description }}</li>
+                {% empty %}
+                    <li style="color: #999;">No projects added. Showcase your work by adding projects.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <a href="{% url 'dashboard' %}" class="btn-back">Back to Dashboard</a>
+        <a href="{% url 'update_profile' %}" class="btn-back" style="background-color: #28a745; margin-left: 10px;">Edit Profile</a>
+    </div>
+</body>
+</html>

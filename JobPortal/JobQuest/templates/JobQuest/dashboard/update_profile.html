@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update Profile</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* Container Styling */
+        .container {
+            max-width: 750px;
+            margin: 3rem auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #00467f;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 24px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.2rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: #00467f;
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 70, 127, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #00467f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005a9e;
+        }
+
+        .add-button, .remove-button {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-button:hover, .remove-button:hover {
+            background-color: #005a9e;
+        }
+
+        .remove-button {
+            background-color: #ff4d4d;
+        }
+
+        .remove-button:hover {
+            background-color: #e60000;
+        }
+
+        .form-errors {
+            background-color: #ffe6e6;
+            border: 1px solid #ff4d4d;
+            border-radius: 4px;
+            padding: 1rem;
+            color: #ff4d4d;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-errors ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .form-row {
+            margin-bottom: 1.5rem;
+            border: 1px solid #e0e0e0;
+            padding: 1.2rem;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+        }
+
+        .quick-actions {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        video {
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 300px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                max-width: 90%;
+                padding: 1.5rem;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            .add-button, .remove-button {
+                padding: 0.5rem 0.8rem;
+                font-size: 13px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Your Profile</h2>
+        
+        <!-- Display form errors, if any -->
+        {% if form.errors %}
+        <div class="form-errors">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if messages %}
+        <div class="form-errors">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Main Profile Form -->
+        <form method="POST" enctype="multipart/form-data" id="profile-form">
+            {% csrf_token %}
+            
+            <!-- Render Default Fields -->
+            {{ form.as_p }}
+
+            <!-- Webcam Section -->
+            <div>
+                <label>Or Take a Photo:</label>
+                <video id="webcam" autoplay playsinline></video>
+                <canvas id="snapshot" style="display: none;"></canvas>
+                <button type="button" id="take-photo" style="margin-top: 1rem;">Take Photo</button>
+                <input type="hidden" name="webcam_photo" id="webcam-photo">
+            </div>
+
+            <!-- Dynamic Section for Education -->
+            <h3 style="color: #00467f;">Education</h3>
+            <div id="education-section">
+                <div class="form-row">
+                    <label>Degree:</label>
+                    <input type="text" name="education-degree[]" placeholder="Enter degree">
+                    <label>University:</label>
+                    <input type="text" name="education-university[]" placeholder="Enter university">
+                    <label>Graduation Year:</label>
+                    <input type="text" name="education-year[]" placeholder="Enter graduation year">
+                    <button type="button" class="remove-button">Remove</button>
+                </div>
+            </div>
+            <button type="button" class="add-button" id="add-education">Add New Education</button>
+
+            <!-- Dynamic Section for Skills -->
+            <h3 style="color: #00467f;">Skills</h3>
+            <div id="skills-section">
+                <div class="form-row">
+                    <label>Skill:</label>
+                    <input type="text" name="skills-name[]" placeholder="Enter a skill">
+                    <button type="button" class="remove-button">Remove</button>
+                </div>
+            </div>
+            <button type="button" class="add-button" id="add-skill">Add New Skill</button>
+
+            <!-- Dynamic Section for Projects -->
+            <h3 style="color: #00467f;">Projects</h3>
+            <div id="projects-section">
+                <div class="form-row">
+                    <label>Project Title:</label>
+                    <input type="text" name="project-title[]" placeholder="Enter project title">
+                    <label>Description:</label>
+                    <textarea name="project-description[]" placeholder="Enter project description"></textarea>
+                    <button type="button" class="remove-button">Remove</button>
+                </div>
+            </div>
+            <button type="button" class="add-button" id="add-project">Add New Project</button>
+
+            <button type="submit" style="margin-top: 2rem;">Save Changes</button>
+        </form>
+    </div>
+
+    <script>
+        // Utility function for adding new rows dynamically
+        function addRow(sectionId, htmlContent) {
+            const section = document.getElementById(sectionId);
+            section.insertAdjacentHTML('beforeend', htmlContent);
+        }
+
+        // Add new education row
+        document.getElementById('add-education').addEventListener('click', function() {
+            const educationHTML = `
+                <div class="form-row">
+                    <label for="education-degree">Degree:</label>
+                    <input type="text" name="education-degree[]" placeholder="Enter degree">
+                    <label for="education-university">University:</label>
+                    <input type="text" name="education-university[]" placeholder="Enter university">
+                    <label for="education-year">Graduation Year:</label>
+                    <input type="text" name="education-year[]" placeholder="Enter graduation year">
+                    <button type="button" class="remove-button">Remove</button>
+                </div>`;
+            addRow('education-section', educationHTML);
+        });
+
+        // Add new skill row
+        document.getElementById('add-skill').addEventListener('click', function() {
+            const skillHTML = `
+                <div class="form-row">
+                    <label for="skills-name">Skill:</label>
+                    <input type="text" name="skills-name[]" placeholder="Enter a skill">
+                    <button type="button" class="remove-button">Remove</button>
+                </div>`;
+            addRow('skills-section', skillHTML);
+        });
+
+        // Add new project row
+        document.getElementById('add-project').addEventListener('click', function() {
+            const projectHTML = `
+                <div class="form-row">
+                    <label for="project-title">Project Title:</label>
+                    <input type="text" name="project-title[]" placeholder="Enter project title">
+                    <label for="project-description">Description:</label>
+                    <textarea name="project-description[]" placeholder="Enter project description"></textarea>
+                    <button type="button" class="remove-button">Remove</button>
+                </div>`;
+            addRow('projects-section', projectHTML);
+        });
+
+        // Remove a row
+        document.body.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-button')) {
+                event.target.parentElement.remove();
+            }
+        });
+        const webcam = document.getElementById('webcam');
+const canvas = document.getElementById('snapshot');
+const takePhotoButton = document.getElementById('take-photo');
+const webcamPhotoInput = document.getElementById('webcam-photo');
+
+let stream; // Variable to hold the webcam stream
+
+// Access the user's webcam
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then((mediaStream) => {
+        stream = mediaStream; // Save the stream for later control
+        webcam.srcObject = stream;
+    })
+    .catch((error) => {
+        console.error("Webcam access denied:", error);
+    });
+
+    // Capture the photo and freeze the feed
+    takePhotoButton.addEventListener('click', () => {
+    const context = canvas.getContext('2d');
+    canvas.width = webcam.videoWidth;
+    canvas.height = webcam.videoHeight;
+
+    // Draw the current webcam frame to the canvas
+    context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+
+    // Get the captured photo as a base64 string
+    const photoDataURL = canvas.toDataURL('image/jpeg');
+    webcamPhotoInput.value = photoDataURL; // Store it in the hidden input field
+
+    // Stop the webcam stream but keep the last frame visible
+    if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop()); // Stop all tracks (video/audio)
+    }
+
+    // Set the captured image back to the video element as a static frame
+    webcam.srcObject = null; // Remove the video feed
+    webcam.style.backgroundImage = `url(${photoDataURL})`; // Set the captured photo as a background image
+    webcam.style.backgroundSize = 'cover'; // Ensure the image covers the entire element
+
+    // Confirmation message
+    alert("Photo captured! Submit the form to save.");
+});
+</script>
+</body>
+</html>

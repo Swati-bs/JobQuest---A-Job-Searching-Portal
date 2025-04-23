@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Your Notifications</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Notifications Container */
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            color: #2780e0;
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        li:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        p {
+            margin: 5px 0;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        small {
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        button {
+            background-color: #2780e0; /* Bright blue for the button */
+            color: white; /* White text */
+            border: none; /* Remove border */
+            padding: 10px 20px; /* Add padding for better size */
+            font-size: 1rem; /* Standard font size */
+            font-weight: bold; /* Make text bold */
+            border-radius: 5px; /* Rounded edges */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth effects */
+        }
+        button:hover {
+            background-color: #1a5dab; /* Darker blue on hover */
+            transform: scale(1.05); /* Slightly enlarge the button on hover */
+        }
+
+        button:active {
+            background-color: #14447d; /* Even darker blue when active */
+            transform: scale(0.95); /* Slightly shrink the button when clicked */
+        }
+
+        /* Center the button */
+        form {
+            text-align: right;
+            margin: 20px 0; /* Add spacing around the form */
+        }
+        
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            p {
+                font-size: 0.95rem;
+            }
+
+            small {
+                font-size: 0.8rem;
+            }
+
+            li {
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Notifications</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Mark All as Read</button>
+    </form>
+    <ul>
+        {% for notification in notifications %}
+        <li>
+            <p>{{ notification.message }}</p>
+            <p><small>Received on: {{ notification.created_at|date:"M d, Y H:i" }}</small></p>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

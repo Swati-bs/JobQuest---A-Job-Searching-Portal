@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update Job Application Status</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 3rem auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #00467f;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 24px;
+            border-bottom: 3px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: bold;
+            color: #555;
+        }
+        select, input[type="text"], button {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        select:focus, input[type="text"]:focus {
+            border-color: #00467f;
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 70, 127, 0.5);
+        }
+        button {
+            background-color: #00467f;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #005a9e;
+        }
+        .message {
+            text-align: center;
+            font-size: 14px;
+            color: #00467f;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Update Job Application Status</h2>
+        <!-- Display form errors, if any -->
+        {% if form.errors %}
+        <div class="form-errors">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if messages %}
+            <div class="form-errors">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <form method="POST" action="{% url 'update_job_application_status' application.id %}">
+            {% csrf_token %}
+            <label>Job Title</label>
+            <input type="text" value="{{ application.job.title }}" readonly>
+
+            <label>Applicant</label>
+            <input type="text" value="{{ application.profile.user.username }}" readonly>
+
+            <label>Current Status</label>
+            <input type="text" value="{{ application.status }}" readonly>
+
+            <label>New Status</label>
+            <select name="status" required>
+                <option value="Screening">Screening</option>
+                <option value="Shortlisted">Shortlisted</option>
+                <option value="Interviewing">Interviewing</option>
+                <option value="Selected">Selected</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+            <button type="submit">Update Status</button>
+        </form>
+    </div>
+</body>
+</html>

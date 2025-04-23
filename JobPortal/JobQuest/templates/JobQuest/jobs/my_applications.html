@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>My Applications</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Page Title */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        thead th {
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #e9ecef;
+        }
+
+        tbody td {
+            padding: 12px;
+            font-size: 0.9rem;
+            color: #343a40;
+        }
+
+        tbody a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        tbody a:hover {
+            text-decoration: underline;
+        }
+
+        /* Empty Applications Message */
+        p {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.85rem;
+            }
+
+            thead th,
+            tbody td {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>My Applications</h1>
+
+    {% if applications %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Status</th>
+                    <th>Date Applied</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for application in applications %}
+                    <tr>
+                        <td><a href="{% url 'job_detail' application.job.id %}">{{ application.job.title }}</a></td>
+                        <td>{{ application.job.company_name }}</td>
+                        <td>{{ application.status }}</td>
+                        <td>{{ application.applied_at }}</td>
+                        <td><a href="{% url 'job_detail' application.job.id %}">View Job Details</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>You have not applied for any jobs yet.</p>
+    {% endif %}
+    <br><br>
+    <a href="{% url 'dashboard' %}" class="btn-back">Back to Dashboard</a>
+</body>
+</html>

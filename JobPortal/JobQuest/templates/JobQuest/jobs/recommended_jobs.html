@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Recommended Jobs</title>
+    <style>
+        /* Reset and Base Styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Page Layout */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        /* Job Listing Styling */
+        .job-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .job-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .job-item:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .job-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #007bff;
+            margin: 0;
+            text-decoration: none;
+        }
+
+        .job-title:hover {
+            text-decoration: underline;
+        }
+
+        .job-details {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Empty Message */
+        .empty-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #777;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .job-item {
+                padding: 10px;
+            }
+
+            .job-title {
+                font-size: 1.2rem;
+            }
+
+            .job-details {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Recommended Jobs</h1>
+        {% if recommended_jobs %}
+            <ul class="job-list">
+                {% for job in recommended_jobs %}
+                    <li class="job-item">
+                        <a href="{% url 'job_detail' job.id %}" class="job-title">{{ job.title }}</a>
+                        <p class="job-details">{{ job.company_name }} - {{ job.location }}</p>
+                        <p class="job-details">Required Skills: {{ job.required_skills }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-message">No recommendations available based on your skills. Update your profile and check back later.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

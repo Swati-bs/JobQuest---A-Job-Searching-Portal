@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Submit Application</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        h2{
+            text-align: center;
+            color: #007bff;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Form Container */
+        .application-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .application-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #007bff;
+        }
+
+        .application-form input,
+        .application-form textarea,
+        .application-form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .application-form input:focus,
+        .application-form textarea:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+        }
+
+        .application-form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .application-form button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .application-form button:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .application-form {
+                padding: 15px;
+            }
+
+            .application-form input,
+            .application-form textarea,
+            .application-form button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>Apply for the Job</h2>
+    <!-- Display form errors, if any -->
+    {% if form.errors %}
+    <div class="form-errors">
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if messages %}
+        <div class="form-errors">
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <form method="POST" enctype="multipart/form-data" class="application-form">
+        {% csrf_token %}
+        <label>Resume:</label>
+        <input type="file" name="resume">
+
+        <label>Cover Letter:</label>
+        <textarea name="cover_letter"></textarea>
+
+        <button type="submit">Submit Application</button>
+    </form>
+</body>
+</html>

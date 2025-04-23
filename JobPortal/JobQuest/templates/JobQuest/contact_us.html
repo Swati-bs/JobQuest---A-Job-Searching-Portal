@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact Us - JobQuest</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #00467f;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        p {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #555;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #00467f;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #00467f;
+            outline: none;
+        }
+
+        button {
+            display: inline-block;
+            background: linear-gradient(90deg, #00467f, #0073e6);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+            background: #005ecb;
+        }
+
+        .contact-info {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .contact-info p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .contact-info a {
+            text-decoration: none;
+            color: #00467f;
+            font-weight: bold;
+        }
+
+        .map {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        iframe {
+            border: none;
+            width: 100%;
+            height: 300px;
+            border-radius: 10px;
+        }
+
+        .footer {
+            background: linear-gradient(90deg, #00467f, #0073e6);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            top: 40px;
+            width: 100%;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contact Us</h1>
+        <p>If you have any questions or need assistance, feel free to reach out to us using the form below.</p>
+
+        <!-- Contact Form -->
+        <form method="post" action="{% url 'contact_us' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Your Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="Write your message here" required></textarea>
+            </div>
+            <button type="submit">Send Message</button>
+        </form>
+
+        <!-- Contact Information -->
+        <div class="contact-info">
+            <p>Email: <a href="mailto:support@jobquest.com">support@jobquest.com</a></p>
+            <p>Phone: +1 234-567-890</p>
+            <p>Address: JobQuest HQ, 1234 Park Street, Career City</p>
+        </div>
+
+        <!-- Embedded Map -->
+        <div class="map">
+            <iframe src="#" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>      <!--embedd map link -->
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p  style="color: white;">&copy; {{ current_year }} JobQuest. All Rights Reserved. | 
+            <a href="{% url 'about_us' %}">About Us</a> | 
+            <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+        </p>
+    </div>
+</body>
+</html>

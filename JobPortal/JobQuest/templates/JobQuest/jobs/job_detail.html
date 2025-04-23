@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ job.title }} - Job Details</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        /* Page Title */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        /* Job Details Container */
+        .job-details {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .job-details p {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .job-details h2 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: #343a40;
+        }
+
+        .job-details p strong {
+            color: #007bff;
+        }
+
+        /* Apply Now Button */
+        .apply-button {
+            display: block;
+            width: max-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .save-button {
+            display: block;
+            width: max-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #aa50f3;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .apply-button:hover {
+            background-color: #218838;
+        }
+
+        /* Applied Message */
+        .applied-message {
+            text-align: center;
+            color: #28a745;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .job-details {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .job-details h2 {
+                font-size: 1.3rem;
+            }
+
+            .job-details p {
+                font-size: 0.9rem;
+            }
+
+            .apply-button {
+                font-size: 0.9rem;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ job.title }}</h1>
+    <a style="float: right;" href="{% url 'dashboard' %}" class="btn-back">Back to Dashboard</a>
+    <br>
+    <div class="job-details">
+        <p><strong>Company Name:</strong> {{ job.company_name }}</p>
+        <p><strong>Location:</strong> {{ job.location }}</p>
+        <p><strong>Job Type:</strong> {{ job.job_type }}</p>
+        <p><strong>Experience Level:</strong> {{ job.experience_level }}</p>
+        <p><strong>Salary Range:</strong> {{ job.salary_range }}</p>
+        <p><strong>Posted On:</strong> {{ job.posted_at }}</p>
+        <p><strong>Application Deadline:</strong> {{ job.application_deadline }}</p>
+        
+        <h2>Job Description:</h2>
+        <p>{{ job.description }}</p>
+        
+        <h2>Required Skills:</h2>
+        <p>{{ job.required_skills }}</p>
+        <div style="display: flex;">
+            {% if user.is_authenticated %}
+                {% if is_saved %}
+                    <a href="{% url 'unsave_job' job.id %}" class="save-button">Unsave Job</a>
+                {% else %}
+                    <a href="{% url 'save_job' job.id %}" class="save-button">Save Job</a>
+                {% endif %}
+            {% endif %}
+            {% if user_applied %}
+                <p class="apply-button">Applied</p>
+            {% else %}
+                <a href="{% url 'apply_job' job.id %}" class="apply-button">Apply Now</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

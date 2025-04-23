@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deactivate Account</title>
+    <style>
+        /* Modal Styling */
+        .modal {
+            display: block; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scrolling if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto; /* Center the modal vertically */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 30%; /* Adjust width of the modal */
+            text-align: center;
+        }
+
+        .modal-content h1 {
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .modal-content button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-secondary {
+            background-color: #7f8c8d;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #606c76;
+        }
+        /* Form Errors Styling */
+        .form-errors {
+            background-color: #ffe6e6;
+            border: 1px solid #ff4d4d;
+            border-radius: 4px;
+            padding: 1rem;
+            color: #ff4d4d;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .form-errors ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- <button onclick="openModal()"></button> -->
+
+    <!-- Modal -->
+    <div id="deactivateModal" class="modal">
+        <div class="modal-content">
+            <h1>Deactivate Account</h1>
+            <p>Are you sure you want to deactivate your account? This action is reversible.</p>
+            <form method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger">Deactivate Account</button>
+            </form>
+            <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Open the modal
+        function openModal() {
+            document.getElementById('deactivateModal').style.display = 'block';
+        }
+
+        // Close the modal
+        function closeModal() {
+            document.getElementById('deactivateModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

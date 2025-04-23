@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard with Sidebar</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #e3f2fd, #ffffff);
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* Header Styling */
+        .header {
+            background: linear-gradient(90deg, #00467f, #0073e6);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .menu-icon {
+            position: absolute;
+            left: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #ffffff;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .menu-icon:hover {
+            transform: scale(1.2);
+            color: #66b2ff;
+        }
+
+        .notification-bell {
+            position: absolute;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #ff5722;
+            color: white;
+            padding: 3px 7px;
+            font-size: 12px;
+            border-radius: 50%;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background: linear-gradient(to bottom, #003458, #005a8e);
+            color: white;
+            box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2);
+            transition: left 0.5s ease;
+            z-index: 1000;
+            padding-top: 60px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h2 {
+            padding: 20px;
+            font-size: 18px;
+            margin: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            color: #dbeafe;
+            text-decoration: none;
+            font-size: 16px;
+            transition: background 0.3s ease, padding-left 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background: #146ba8;
+            padding-left: 30px;
+        }
+
+        /* Smooth Sidebar Animations */
+        @keyframes slideIn {
+            from {
+                left: -250px;
+            }
+            to {
+                left: 0;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                left: 0;
+            }
+            to {
+                left: -250px;
+            }
+        }
+
+        /* Main Content Styling */
+        .container {
+            margin: 80px auto 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            max-width: 1200px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: linear-gradient(to bottom right, #0066cc, #00ccff);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(90deg, #00467f, #0073e6);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 16px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <span class="menu-icon" onclick="toggleSidebar()">☰</span>
+        <h1>Welcome, {{ profile.user.username }}!</h1>
+        <span class="notification-bell">
+            <a href="{% url 'notifications' %}" style="text-decoration: none; color: inherit;">🔔
+                {% if unread_count > 0 %}
+                    <span class="notification-badge">{{ unread_count }}</span>
+                {% endif %}
+            </a>
+        </span>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar">
+        <h2>Your Profile</h2>
+        <a href="{% url 'update_profile' %}">Update Profile</a>
+        <a href="{% url 'view_profile' %}">View Profile</a>
+        <h2>Jobs</h2>
+        <a href="{% url 'job_list' %}">Search Jobs</a>
+        <a href="{% url 'saved_jobs' %}">Saved Jobs</a>
+        <a href="{% url 'my_applications' %}">Applied Jobs</a>
+        <a href="{% url 'recommended_jobs' %}">Recommendations</a>
+        <h2>Settings</h2>
+        <a href="{% url 'change_password' %}">Change Password</a>
+        <a href="{% url 'deactivate_account' %}">Deactivate Account</a>
+        <a href="{% url 'logout-confirmation' %}">Logout</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h2 >Dashboard Overview</h2>
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Profile Details</h3>
+                <p>Name: {{ profile.first_name }} {{ profile.last_name }}</p>
+                <p>Email: {{ profile.user.email }}</p>
+            </div>
+            <div class="card">
+                <h3>Profile Summary</h3>
+                <p>{{ profile.bio|default:"Not provided" }}</p>
+            </div>
+            <div class="card">
+                <h3>Quick Actions</h3>
+                <p><a href="{% url 'update_profile' %}" style="color: white;">Update Profile</a></p>
+                <p><a href="{% url 'view_profile' %}" style="color: white;">View Profile</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; {{ current_year }} JobQuest. All Rights Reserved.</p>
+        <a href="{% url 'about_us' %}">About Us</a> |
+        <a href="{% url 'contact_us' %}">Contact Us</a> |
+        <a href="{% url 'privacy_policy' %}">Privacy Policy</a>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('active')) {
+                sidebar.style.animation = 'slideOut 0.5s forwards';
+                setTimeout(() => sidebar.classList.remove('active'), 500);
+            } else {
+                sidebar.classList.add('active');
+                sidebar.style.animation = 'slideIn 0.5s forwards';
+            }
+        }
+    </script>
+</body>
+</html>
