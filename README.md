@@ -11,7 +11,7 @@
   Job seekers can browse job listings using an intuitive **search bar** and **filters** (Location, Job Type, Salary Range, Experience Level), allowing them to narrow down their job search based on personal preferences and industry needs.
 
 - **Job Recommendations**  
-  The system intelligently suggests **personalized job listings** based on users' resumes, job preferences, past applications, and industry trends. The more users engage, the better the recommendations.
+The system recommends personalized job listings by **matching the skills** listed in a user’s resume with the required skills in job postings, ensuring relevant and targeted opportunities.
 
 - **Real-Time Application Tracking**  
   Applications are tracked in real-time, allowing users to monitor the progress of their applications with status updates such as *Applied*, *Shortlisted*, *Interviewing*, and *Selected*.
